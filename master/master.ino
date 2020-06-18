@@ -1,6 +1,11 @@
 #include <I2Cdev.h>
 #include <MPU6050.h>
 #include <Wire.h>
+#include <SoftwareSerial.h>
+
+int rxdPort = 0;
+int txdPort = 1;
+SoftwareSerial mySerial =  SoftwareSerial(rxdPort, txdPort);
 
 #define MPU6050_ACCEL_OFFSET_X -773
 #define MPU6050_ACCEL_OFFSET_Y -700
@@ -13,10 +18,10 @@ MPU6050 mpu;
 //Endereco I2C do MPU6050
 const int MPU = 0x68;
 
-int upRight = 9;
-int upLeft = 11;
-int downRight = 10;
-int downLeft = 12;
+//int upRight = 9;
+//int upLeft = 11;
+//int downRight = 10;
+//int downLeft = 12;
 
 bool configured = false;
 
@@ -26,10 +31,12 @@ void setup()
 {
 
     Serial.begin(9600);
-    pinMode(upRight, INPUT);
-    pinMode(upLeft, INPUT);
-    pinMode(downRight, INPUT);
-    pinMode(downLeft, INPUT);
+    // pinMode(upRight, INPUT);
+    // pinMode(upLeft, INPUT);
+    // pinMode(downRight, INPUT);
+    // pinMode(downLeft, INPUT);
+    mySerial.begin(9600);
+    mySerial.println("Master > Hello, world?");
 
     Wire.begin();
     mpu.initialize();
@@ -81,9 +88,58 @@ void getDimensions()
 
 void send()
 {
-    if (Serial.available() > 0)
+    int command = 0;
+
+    if (AcX < 14000 && AcY > 30000)
     {
-        int foo[7] = {AcX, AcY, AcZ, Tmp, GyX, GyY, GyZ};
-        Serial.write(foo);
+        Serial.println(" Front | RIGHT ");
+
+        command = 1;
     }
+    else if (AcX < 14000 && AcY < 22000)
+    {
+        Serial.println(" Front | LEFT ");
+
+        command = 2;
+    }
+    else if (AcX < 14000)
+    {
+        Serial.println(" Front ");
+
+        command = 3;
+    }
+    else if (AcX > 25000 && AcY > 30000)
+    {
+        Serial.println(" Back | Right ");
+
+        command = 4;
+    }
+    else if (AcX > 25000 && AcY < 22000)
+    {
+        Serial.println(" Back | LEFT ");
+
+        command = 5;
+    }
+    else if (AcX > 25000)
+    {
+        Serial.println(" Back ");
+
+        command = 6;
+    }
+    else if (AcY < 22000)
+    {
+        Serial.println(" LEFT ");
+
+        command = 7;
+    }
+    else if (AcY > 30000)
+    {
+        Serial.println(" Right ");
+
+        command = 8;
+    }
+    
+
+    mySerial.write(command);
+    delay(50);
 }
