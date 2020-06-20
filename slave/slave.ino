@@ -45,8 +45,10 @@ void recive()
 {
 
     if(mySerial.available() > 0)
-    { 
+    {
         command = mySerial.read();
+    } else {
+        command = 0;
     }
 //    Serial.println(mySerial.available());
 }

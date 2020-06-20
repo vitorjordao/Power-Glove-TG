@@ -141,5 +141,5 @@ void send()
     
 
     mySerial.write(command);
-    delay(50);
+    delay(100);
 }
