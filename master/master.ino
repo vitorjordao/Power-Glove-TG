@@ -18,11 +18,6 @@ MPU6050 mpu;
 //Endereco I2C do MPU6050
 const int MPU = 0x68;
 
-//int upRight = 9;
-//int upLeft = 11;
-//int downRight = 10;
-//int downLeft = 12;
-
 bool configured = false;
 
 int AcX, AcY, AcZ, Tmp, GyX, GyY, GyZ;
@@ -31,10 +26,6 @@ void setup()
 {
 
     Serial.begin(9600);
-    // pinMode(upRight, INPUT);
-    // pinMode(upLeft, INPUT);
-    // pinMode(downRight, INPUT);
-    // pinMode(downLeft, INPUT);
     mySerial.begin(9600);
     mySerial.println("Master > Hello, world?");
 

@@ -1,4 +1,3 @@
-#include <Wire.h>
 #include <Keyboard.h>
 #include <SoftwareSerial.h>
 
